@@ -1,18 +1,20 @@
-from services.db_connection import get_connection
-from model.pedidos import Pedido # type: ignore
+from fastapi import APIRouter
+from services.pedidosservice import PedidosService  
 
-class PedidosControl:
+router = APIRouter(prefix="/pedidos", tags=["Pedidos"])
 
-    @staticmethod
-    def obtener_pedidos_por_estado(estado_id: int):
-        conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
-        query = """
-            SELECT * FROM Pedidos WHERE estado_id = %s
-        """
-        cursor.execute(query, (estado_id,))
-        results = cursor.fetchall()
-        pedidos = [Pedido(**row).to_dict() for row in results]
-        cursor.close()
-        conn.close()
-        return pedidos
+@router.get("/enviados")
+def get_pedidos_enviados():
+    return PedidosService.obtener_pedidos_por_estado(1)
+
+@router.get("/cancelados")
+def get_pedidos_cancelados():
+    return PedidosService.obtener_pedidos_por_estado(2)
+
+@router.get("/pagados")
+def get_pedidos_pagados():
+    return PedidosService.obtener_pedidos_por_estado(3)
+
+@router.get("/reenviados")
+def get_pedidos_reenviados():
+    return PedidosService.obtener_pedidos_por_estado(4)

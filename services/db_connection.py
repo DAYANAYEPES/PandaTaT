@@ -1,3 +1,4 @@
+#aqui importamos la coneccioon a la base de datos con el mysqlconnector 
 import mysql.connector
 
 def get_connection():
